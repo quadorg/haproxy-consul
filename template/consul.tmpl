@@ -11,6 +11,7 @@ global
 
 defaults
     mode http
+    maxconn 20000
     option forwardfor
     option http-server-close
     timeout connect {{or (key "service/haproxy/timeouts/connect") "5000ms"}}
