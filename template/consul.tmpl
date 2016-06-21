@@ -45,7 +45,6 @@ frontend www
     capture response header Last-Modified len 200
     {{end}}
 
-## Tagged services, tag is used for domain information
 {{ range services }}{{ if in .Tags $haName }}
 ## Frontend definition for domain {{ .Name }}
 {{range $service := service .Name}}{{ range $tag := .Tags }}{{$pair := $tag | split "="}}{{$value := index $pair 1}}{{$config := $value | split "|"}}{{ $domain := index $config 0 }}{{if (eq (index $pair 0) "http")}}

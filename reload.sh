@@ -12,8 +12,11 @@ CONSUL_CONNECT=${CONSUL_CONNECT:-consul.service.consul:8500}
 CONSUL_MINWAIT=${CONSUL_MINWAIT:-2s}
 CONSUL_MAXWAIT=${CONSUL_MAXWAIT:-10s}
 CONSUL_LOGLEVEL=${CONSUL_LOGLEVEL:-info}
-
-
+CONSUL_TEMPLATE_PID_FILE=${CONSUL_TEMPLATE_PID_FILE:-/consul-template/consul.pid}
+if [[ -f $CONSUL_TEMPLATE_PID_FILE ]]; then
+    CONSUL_TEMPLATE_PID=$(<$CONSUL_TEMPLATE_PID_FILE)
+fi
+CONSUL_TEMPLATE_PID=${CONSUL_TEMPLATE_PID:-1}
 
 function update_configuration {
     if [[ -n "${CONSUL_TOKEN}" ]]; then
@@ -46,7 +49,8 @@ function reload_configuration {
         echo "Configuration valid. Going to reload HA Proxy."
         mv /tmp/haproxy.cfg /haproxy/haproxy.cfg
         nl-qdisc-add --dev=lo --parent=1:4 --id=40: --update plug --buffer &> /dev/null
-        /usr/sbin/haproxy -f /haproxy/haproxy.cfg -D -p "/var/run/haproxy.pid" -sf "${PID}"  || return 1
+        # Tell consul-template to reload by issuing a signal hangup (SIGHUP)
+        kill -HUP ${CONSUL_TEMPLATE_PID}
         nl-qdisc-add --dev=lo --parent=1:4 --id=40: --update plug--release-indefinite &> /dev/null
         return 0
     else
