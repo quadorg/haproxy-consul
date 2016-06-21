@@ -2,6 +2,7 @@ FROM alpine:3.4
 
 MAINTAINER Steven Borrelli <steve@aster.is>
 
+
 ENV CONSUL_TEMPLATE_VERSION=0.14.0
 
 RUN apk update && \
