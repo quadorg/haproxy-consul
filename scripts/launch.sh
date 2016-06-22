@@ -76,7 +76,6 @@ function launch_haproxy {
     # consul-template won't run the 'optional command' and thus haproxy won't
     # be started)
     [[ -f /haproxy/haproxy.cfg ]] && rm /haproxy/haproxy.cfg
-
     exec ${CONSUL_TEMPLATE} -config ${CONSUL_CONFIG} \
                        -log-level ${CONSUL_LOGLEVEL} \
                        -wait ${CONSUL_MINWAIT}:${CONSUL_MAXWAIT} \

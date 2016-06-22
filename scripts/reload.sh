@@ -48,17 +48,14 @@ function reload_configuration {
     if [[ "$(/usr/sbin/haproxy -c -f /tmp/haproxy.cfg)" ]]; then
         echo "Configuration valid. Going to reload HA Proxy."
         mv /tmp/haproxy.cfg /haproxy/haproxy.cfg
-        nl-qdisc-add --dev=lo --parent=1:4 --id=40: --update plug --buffer &> /dev/null
         # Tell consul-template to reload by issuing a signal hangup (SIGHUP)
-        kill -HUP ${CONSUL_TEMPLATE_PID}
-        nl-qdisc-add --dev=lo --parent=1:4 --id=40: --update plug--release-indefinite &> /dev/null
+        kill -HUP ${CONSUL_TEMPLATE_PID}        
         return 0
     else
         return 1
     fi
 
 }
-PID="$(cat /var/run/haproxy.pid)"
 [[ -f /haproxy/haproxy.cfg ]] && mv /haproxy/haproxy.cfg /haproxy/haproxy.cfg.bak
 update_configuration
 if reload_configuration; then

@@ -25,6 +25,8 @@ defaults
     timeout server 300000
     option forwardfor
     option http-server-close
+    option redispatch
+    retries 2
 
 ###### Frontend definitions ######
 
