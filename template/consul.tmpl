@@ -78,7 +78,7 @@ backend {{ .Name }}_https_backend
     http-request set-header X-Forwarded-Port %[dst_port]
     http-request add-header X-Forwarded-Proto https if { ssl_fc }
     {{range $service := service .Name}} {{if in .Tags $haName}} {{range $tag := .Tags}} {{ $pair := $tag | split "=" }} {{if (eq (index $pair 0) "https")}}
-    server {{ $service.Node }} {{ $service.Address }}:{{ $service.Port }} check ssl verify none{{ end }}{{ end }}{{ end }}{{ end }}
+    server {{ $service.Node }} {{ $service.Address }}:{{ $service.Port }} check {{ end }}{{ end }}{{ end }}{{ end }}
 backend {{ .Name }}_tcp_backend
     # To be continued…
 {{end}}{{end}}
